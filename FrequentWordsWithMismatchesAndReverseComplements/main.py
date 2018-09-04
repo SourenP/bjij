@@ -1,14 +1,20 @@
 """
-Frequent Words with Mismatches Problem: Find the most frequent k-mers with mismatches in a string.
-     Input: A string Text as well as integers k and d. (You may assume k <= 12 and d <= 3.)
-     Output: All most frequent k-mers with up to d mismatches in Text.
-
-Code Challenge: Solve the Frequent Words with Mismatches Problem.
+Frequent Words with Mismatches and Reverse Complements Problem: Find the most frequent k-mers (with mismatches and reverse complements) in a DNA string.
+      Input: A DNA string Text as well as integers k and d.
+      Output: All k-mers Pattern maximizing the sum Countd(Text, Pattern)+ Countd(Text, Pattern)
+      over all possible k-mers.
 
 """
+
 from collections import Counter
 from itertools import takewhile
 import operator
+
+
+comp = {'T': 'A', 'G': 'C', 'A': 'T', 'C': 'G'}
+
+def ReverseComplement(data):
+    return "".join(reversed([comp.get(x) for x in data]))
 
 letters = {'A', 'C', 'G', 'T'}
 
@@ -26,15 +32,14 @@ def Neighbors(pattern, d):
 
     return mutations
 
-# Write your FrequentWordsWithMismatches() function here, along with any subroutines you need.
-# Your function should return a list.
-def FrequentWordsWithMismatches(data, k, d):
+def FrequentWordsWithMismatchesAndReverseComplements(data, k, d):
     freq = Counter()
 
     for i in range(len(data) - k + 1):
         k_mer = data[i:i+k]
         for n in Neighbors(k_mer, d):
             freq[n] += 1
+            freq[ReverseComplement(n)] += 1
 
     items = freq.most_common()
     max_ = items[0][1]
